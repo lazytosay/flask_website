@@ -18,6 +18,7 @@ flask-ckeditor = "*"
 wtforms = {extras = ["email"], version = "*"}
 sendgrid = "*"
 pillow = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
