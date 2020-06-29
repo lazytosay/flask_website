@@ -1,0 +1,52 @@
+div#wholepage{
+}
+
+body{
+    margin: 0px 5px;
+}
+
+h1#header-page{
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+
+
+section#navigation{
+    background-color: #f2f2f2;
+    padding: 5px;
+    margin: 0px;
+    margin-bottom: 5px;
+}
+
+a.nav-item{
+    color: black;
+    list-style-type: none;
+    display: inline;
+    font-weight: bold;
+    margin: 5px;
+    text-decoration: none;
+    font-size: 120%;
+}
+
+a.active{
+    background-color: #ccccff;
+    padding: 10px 1px;
+    border-radius: 5px;
+}
+
+footer{
+    background-color: #f2f2f2;
+    bottom: 0;
+    text-align: center;
+    font-size: 80%;
+}
+
+a{
+    text-decoration: none;
+}
+
+.bar-rounded{
+    border-radius: 5px;
+}

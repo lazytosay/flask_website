@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Bill-Flask Website{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/gif" href="{{url_for('static', filename='photos/favicon.png') }}">
+</head>
+<body>
+    <div id="wholepage">
+
+    {% from "bootstrap/nav.html" import render_nav_item %}
+
+    <h1 id="header-page">{% block header %} Welcome To Bill - Flask Website {% endblock %}</h1>
+
+    {% block nav %}
+    <section id="navigation" class="bar-rounded">
+        <nav class="nav-bar">
+            {{render_nav_item('main.index', 'Home') }}
+            {{render_nav_item('main.about', 'About') }}
+        </nav>
+    </section>
+    {% endblock %}
+
+    <section id="content">
+        {% block content%} {% endblock %}
+    </section>
+
+    {%block footer %}
+    <footer class="bar-rounded">
+        &copy;Bill Chen; <a href="https://github.com/lazytosay/flask_website">Github</a>
+    </footer>
+    {% endblock %}
+
+    <script>
+        {% block scripts %}
+            {{bootstrap.load_css()}}
+            {{bootstrap.load_js()}}
+        {% endblock %}
+    </script>
+
+    </div>
+</body>
+</html>
