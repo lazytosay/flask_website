@@ -19,6 +19,7 @@ wtforms = {extras = ["email"], version = "*"}
 sendgrid = "*"
 pillow = "*"
 gunicorn = "*"
+flask-limiter = "*"
 
 [requires]
 python_version = "3.7"

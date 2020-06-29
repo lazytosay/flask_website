@@ -1,7 +1,7 @@
 from flask import Flask
 import os
 from website.settings import config
-from website.extensions import bootstrap
+from website.extensions import bootstrap, limiter
 
 
 def create_app(config_name=None):
@@ -23,3 +23,4 @@ def register_blueprints(app):
 
 def register_extensions(app):
     bootstrap.init_app(app)
+    limiter.init_app(app)
