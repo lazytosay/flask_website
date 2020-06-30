@@ -41,6 +41,7 @@ footer{
     bottom: 0;
     text-align: center;
     font-size: 80%;
+    margin-top: 10px;
 }
 
 a{
@@ -49,4 +50,25 @@ a{
 
 .bar-rounded{
     border-radius: 5px;
+}
+
+div.error-description{
+    text-align: center;
+    font-size: 150%;
+}
+
+div.error-code{
+    font-size: 300%;
+    text-align: center;
+    color: red;
+}
+
+.float-right{
+    float: right;
+}
+
+div.message-alert{
+    text-align: center;
+    margin: 5px;
+
 }

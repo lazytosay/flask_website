@@ -13,11 +13,26 @@
 
     <h1 id="header-page">{% block header %} Welcome To Bill - Flask Website {% endblock %}</h1>
 
+
+
+    {% for message in get_flashed_messages() %}
+        <div class="message-alert">{{message}}</div>
+    {% endfor %}
+
     {% block nav %}
     <section id="navigation" class="bar-rounded">
         <nav class="nav-bar">
             {{render_nav_item('main.index', 'Home') }}
             {{render_nav_item('main.about', 'About') }}
+
+            {% if current_user.is_authenticated %}
+                <small class="nav-username">Hi, {{current_user.username}}</small>
+                <div class="float-right">{{render_nav_item('auth.logout', 'Logout') }}</div>
+            {% else %}
+                {{render_nav_item('auth.register', 'Register') }}
+                <div class="float-right">{{render_nav_item('auth.login', 'Login') }}</div>
+            {% endif %}
+
         </nav>
     </section>
     {% endblock %}

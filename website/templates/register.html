@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Register Page {% endblock %}
+
+{% block header %}This is the Register Page {% endblock %}
+
+{% block content %}
+    {% from 'bootstrap/form.html' import render_form %}
+    This is register page
+    {{render_form(form)}}
+{% endblock %}

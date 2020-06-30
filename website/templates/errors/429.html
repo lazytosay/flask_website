@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %} TOO MANY REQUESTS {% endblock %}
+{% block header %} Please Slow Down..Try Again Later {% endblock %}
+{% block content %}
+    <div class="error-code">Status Code: 429</div>
+    <div class="error-description">Limit: {{description}}</div>
+{% endblock %}

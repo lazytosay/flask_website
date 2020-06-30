@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %} Login Page {% endblock %}
+
+{% block header %}This is the Login Page {% endblock %}
+
+{% block content %}
+    {% from 'bootstrap/form.html' import render_form %}
+    this is loging page
+    {{render_form(form)}}
+{% endblock %}
