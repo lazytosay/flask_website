@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms import ValidationError
 from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email
 
-from website.models import User
+from website.models import UserCommon
 
 class RegisterForm(FlaskForm):
     name = StringField('name', validators=[DataRequired(), Length(1, 30)])
@@ -18,11 +18,11 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('submit')
 
     def validate_email(self, field):
-        if User.query.filter_by(email=field.data.lower()).first():
+        if UserCommon.query.filter_by(email=field.data.lower()).first():
             raise ValidationError('The email is already in use...')
 
     def validate_username(self, field):
-        if User.query.filter_by(username=field.data).first():
+        if UserCommon.query.filter_by(username=field.data).first():
             raise ValidationError('The username is already in user...')
 
 class LoginForm(FlaskForm):

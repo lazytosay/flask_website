@@ -1,7 +1,7 @@
 from flask import current_app, flash
 from itsdangerous import BadSignature, SignatureExpired
 from itsdangerous import TimedJSONWebSignatureSerializer as Serialier
-from website.models import User
+from website.models import UserCommon as User
 from website.extensions import db
 
 

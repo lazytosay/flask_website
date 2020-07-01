@@ -1,7 +1,7 @@
 from website.extensions import sendgrid_client
 from sendgrid.helpers.mail import Mail
 from threading import Thread
-from website.models import User
+from website.models import UserCommon as User
 from flask import abort, flash
 
 def _send_async_email(message):
