@@ -54,7 +54,7 @@ class Question(db.Model):
     question = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-    collectors = db.relationship('UserCommon', secondary='collections_questions', back_populates='collectors')
+    collectors = db.relationship('UserCommon', secondary='collections_questions', back_populates='collections')
 
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='questions')

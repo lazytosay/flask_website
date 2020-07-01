@@ -5,7 +5,7 @@ from website.extensions import limiter, db
 from website.forms.auth import RegisterForm, LoginForm
 from website.utils import generate_token, validate_token
 from website.sendGrid import send_confirm_email
-from website.models import UserCommon
+from website.models import UserCommon as User
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -22,7 +22,7 @@ def register():
         username = form.username.data
         password = form.password.data
 
-        user = UserCommon(username=username, name=name, email=email)
+        user = User(username=username, name=name, email=email)
         user.set_password(password)
 
         db.session.add(user)
@@ -52,7 +52,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
 
-        user = UserCommon.query.filter(UserCommon.email == form.email.data.lower()).first()
+        user = User.query.filter(User.email == form.email.data.lower()).first()
 
         if not user:
             flash("account not exists...")

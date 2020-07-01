@@ -11,7 +11,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 @login_manager.user_loader
 def load_user(user_id):
-    from website.models import User
+    from website.models import UserCommon as User
     user = User.query.get_or_404(int(user_id))
     return user
 
