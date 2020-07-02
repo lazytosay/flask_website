@@ -7,7 +7,7 @@ class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='comments')
@@ -15,7 +15,7 @@ class Comment(db.Model):
     replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
 
-    replies = db.relationship('Comment', back_populates='replied', cascade='all, delete')
+    replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan')
 
 class Answer(db.Model):
     __tablename__ = 'answer'
@@ -43,6 +43,19 @@ class Tag(db.Model):
     #created_by_id = db.Column(db.Integer, db.ForeignKey('Admin.id'))
     #created_by = db.relationship('Admin', back_populates='tags')
 
+    def delete(self):
+        default_tag = Tag.query.get(1)
+        questions = self.questions[:]
+
+        for q in questions:
+            q.tags.remove(self)
+            if len(q.tags == 0):
+                q.tags.append(default_tag)
+
+        db.session.delete(self)
+        db.session.commit()
+
+
 tags_questions = db.Table('tags_questions',
                           db.Column('tag_id', db.ForeignKey('tag.id')),
                           db.Column('question_id', db.ForeignKey('question.id'))
@@ -52,14 +65,14 @@ class Question(db.Model):
     __tablename__ = "question"
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     collectors = db.relationship('UserCommon', secondary='collections_questions', back_populates='collections')
 
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='questions')
 
-    answers = db.relationship('Answer', back_populates='question')
+    answers = db.relationship('Answer', back_populates='question', cascade='all, delete-orphan')
 
     tags = db.relationship('Tag', secondary='tags_questions', back_populates='questions')
 
@@ -85,7 +98,7 @@ class UserCommon(db.Model, UserMixin):
     is_confirmed = db.Column(db.Boolean, default=False)
 
     collections = db.relationship('Question', secondary='collections_questions', back_populates='collectors')
-    questions = db.relationship('Question', back_populates='author')
+    questions = db.relationship('Question', back_populates='author', cascade='all, delete-orphan')
     answers = db.relationship('Answer', back_populates='author')
     comments = db.relationship('Comment', back_populates='author')
 

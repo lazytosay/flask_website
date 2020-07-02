@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+    <div class="question-list">
+        {% for question in questions %}
+                <div class="question-list-body">
+                    <div class="question-list-truncated">
+                        {{question.question | striptags | truncate }}
+                        <a class=question-list-link href="{{url_for('main.question_detail', question_id=question.id) }}">READ MORE</a>
+                    </div>
+
+                    <small class="question-list-timestamp, float-right">
+                        {{moment(question.timestamp).format('LLL') }}
+                    </small>
+
+                    <small class="question-list-author">
+                        By: {{question.author.name}}
+                    </small>
+                </div>
+
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+{% endblock %}

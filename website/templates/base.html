@@ -20,10 +20,12 @@
     {% endfor %}
 
     {% block nav %}
-    <section id="navigation" class="bar-rounded">
+    <section id="section-navigation" class="bar-rounded">
         <nav class="nav-bar">
             {{render_nav_item('main.index', 'Home') }}
             {{render_nav_item('main.about', 'About') }}
+
+            {{render_nav_item('main.question_new', 'New Question') }}
 
             {% if current_user.is_authenticated %}
                 <small class="nav-username">Hi, {{current_user.username}}</small>
@@ -37,9 +39,11 @@
     </section>
     {% endblock %}
 
-    <section id="content">
+
+    <section id="section-content">
         {% block content%} {% endblock %}
     </section>
+
 
     {%block footer %}
     <footer class="bar-rounded">
@@ -51,6 +55,8 @@
         {% block scripts %}
             {{bootstrap.load_css()}}
             {{bootstrap.load_js()}}
+            {{moment.include_jquery()}}
+            {{moment.include_moment()}}
         {% endblock %}
     </script>
 

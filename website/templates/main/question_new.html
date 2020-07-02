@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}New Question {% endblock %}
+
+{% block header %}New Question {% endblock %}
+
+{% block content %}
+    {% from 'bootstrap/form.html' import render_form %}
+    This is new question
+    <div class="question-new">
+        {{render_form(form) }}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{super() }}
+    {{ckeditor.load() }}
+{% endblock %}

@@ -32,7 +32,7 @@ def register():
         send_confirm_email(url_for('auth.check', token=token, _external=True), username=username)
         flash("Register success!")
         return redirect(url_for('main.index'))
-    return render_template('register.html', form=form)
+    return render_template('auth/register.html', form=form)
 
 
 @auth_bp.route('/check/<token>')
@@ -65,7 +65,7 @@ def login():
             flash("logged in...")
             return redirect(url_for('main.index'))
 
-    return render_template('login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 @auth_bp.route('/logout')

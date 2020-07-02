@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %} Question Detail {% endblock %}
+
+{% block header %}Quesiton Detail {% endblock %}
+
+{% block content %}
+    <section class="question">
+        <div class="question-body">{{question.question | safe}}</div>
+
+    </section>
+
+    <a class="btn" href="{{url_for('main.answer_new', question_id=question.id) }}">New Answer</a>
+    <hr>
+
+    <section class="answer">
+        <h3 class="answer-header text-align-center">Answers</h3>
+        {% for ans in answers %}
+            <div class="answer-container">
+                <small class="answer-timestamp">{{moment(ans.timestamp).format('LLL') }}</small>
+                <small class="answer-author text-align-right">by: {{ans.author.name}}</small>
+                <div class="answer-body">{{ans.answer | safe }}</div>
+            </div>
+
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </section>
+{% endblock %}
