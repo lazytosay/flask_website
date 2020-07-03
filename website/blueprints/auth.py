@@ -47,7 +47,7 @@ def check(token):
     return redirect(url_for('main.index'))
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit('10/minute')
+@limiter.limit('10/minute, 100/day')
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -55,7 +55,7 @@ def login():
         user = User.query.filter(User.email == form.email.data.lower()).first()
 
         if not user:
-            flash("account not exists...")
+            flash("check you account or password...")
             return redirect(url_for('auth.login'))
 
         password = form.password.data
@@ -64,6 +64,7 @@ def login():
             login_user(user)
             flash("logged in...")
             return redirect(url_for('main.index'))
+        flash("check your account or password...")
 
     return render_template('auth/login.html', form=form)
 

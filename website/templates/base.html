@@ -11,21 +11,18 @@
 
     {% from "bootstrap/nav.html" import render_nav_item %}
 
-    <h1 id="header-page">{% block header %} Welcome To Bill - Flask Website {% endblock %}</h1>
-
-
-
-    {% for message in get_flashed_messages() %}
-        <div class="message-alert">{{message}}</div>
-    {% endfor %}
 
     {% block nav %}
-    <section id="section-navigation" class="bar-rounded">
+    <section id="section-navigation">
         <nav class="nav-bar">
-            {{render_nav_item('main.index', 'Home') }}
+            <div class="title">{{render_nav_item('main.index', 'XYZ-DATABASE') }}</div>
             {{render_nav_item('main.about', 'About') }}
 
-            {{render_nav_item('main.question_new', 'New Question') }}
+            <form class="search" method="post" action="{{url_for('main.search') }}">
+                <label class="search-box-label" for="search-box">Search</label>
+                <input type="text" id="search-box" name="keyword">
+                <input type="submit">
+            </form>
 
             {% if current_user.is_authenticated %}
                 <small class="nav-username">Hi, {{current_user.username}}</small>
@@ -39,8 +36,32 @@
     </section>
     {% endblock %}
 
+    <section id="section-sidebar-left">
+        {% block sidebar_left %}
+        {% include 'main/_sidebar_left.html' %}
+        {% endblock %}
+    </section>
+
+    <section id="section-sidebar-right">
+        {% block sidebar_right %}
+        {% include 'main/_sidebar_right.html' %}
+        {% endblock %}
+    </section>
+
+
+
+
+
+
 
     <section id="section-content">
+        <h1 id="header-page">{% block header %} Welcome To Bill - Flask Website {% endblock %}</h1>
+
+        {% for message in get_flashed_messages() %}
+        <div class="message-alert">{{message}}</div>
+        {% endfor %}
+
+
         {% block content%} {% endblock %}
     </section>
 

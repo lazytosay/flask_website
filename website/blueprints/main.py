@@ -3,7 +3,7 @@ from website.extensions import limiter, db
 from website.forms.main import QuestionForm, AnswerForm
 from website.models import Question, Answer
 from website.models import UserCommon as User
-from flask_login import current_user
+from flask_login import current_user, login_required
 
 main_bp = Blueprint('main', __name__)
 
@@ -25,6 +25,7 @@ def about():
 
 
 @main_bp.route('/question/new', methods=['GET', 'POST'])
+@login_required
 @limiter.limit("2 per second")
 def question_new():
     form = QuestionForm()
@@ -56,6 +57,7 @@ def question_detail(question_id):
 
 
 @main_bp.route('/answer/new/<int:question_id>', methods=['GET', 'POST'])
+@login_required
 @limiter.limit("5 per minute")
 def answer_new(question_id):
     answered = Answer.query.filter_by(author=current_user, question_id=question_id).first()
@@ -76,3 +78,18 @@ def answer_new(question_id):
 
     #return redirect(url_for('main/answer_new', form=form))
     return render_template('main/answer_new.html', form=form)
+
+
+@main_bp.route("/search", methods=['POST'])
+def search():
+
+    """
+    keyword = request.form.get('keyword', "NONE")
+    if keyword:
+        flash("get keyword: " + keyword)
+    else:
+        flash("empty...", "warning")
+    """
+    flash("NOT IMPLEMENTED YET...", "warning")
+
+    return redirect(url_for('main.index'))

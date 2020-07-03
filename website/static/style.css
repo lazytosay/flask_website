@@ -1,26 +1,47 @@
 
 
 body{
-    margin: 0px 5px;
+    margin: 0px;
     font-size: 18px;
 }
 
 h1#header-page{
+    font-size: 200%;
     text-align: center;
     margin-top: 0px;
-    margin-bottom: 0px;
+    margin-bottom: 15px;
 }
 
 
 
 section#section-navigation{
     background-color: #f2f2f2;
-    padding: 5px;
     margin: 0px;
     margin-bottom: 5px;
+    height: 50px;
+
 }
 
+section#section-navigation > nav.nav-bar > div.title{
+    padding: 5px;
+    font-size: 230%;
+    display: inline;
+}
 
+section#section-navigation > nav.nav-bar > a.nav-item{
+    font-size: 150%;
+    padding: 5px;
+}
+
+section#section-navigation > nav.nav-bar > form.search{
+
+    display: inline;
+}
+
+div.message-alert{
+    background-color: #FF7F50;
+}
+/*
 a.nav-item{
     color: black;
     list-style-type: none;
@@ -30,28 +51,63 @@ a.nav-item{
     text-decoration: none;
     font-size: 120%;
 }
+*/
 
+/*
 a.active{
     background-color: #ccccff;
     padding: 10px 1px;
     border-radius: 5px;
 }
+*/
 
 
 section#section-sidebar-left{
     width: 10%;
     margin-right: 90%;
     margin-bottom: 0px;
-    border-right: 1px solid gray;
-    min-height: 100vh;
+    /*min-height: 100%; */
+
+    position: absolute;
+    top: 90px;
+    left: 0px;
 }
 
 section#section-sidebar-right{
     width: 15%;
     margin-left:  85%;
     margin-right: 0px;
-    border-left: 1px solid gray;
+    /*min-height: 100%;*/
+
+    position: absolute;
+    top: 80px;
+    right: 0px;
+
 }
+
+
+div.sidebar-left-nav-list{
+    font-size: 100%;
+    overflow: hidden;
+}
+
+div.sidebar-left-nav-list > a.nav-item{
+    color: #B0B0B0;
+    display: block;
+    text-align: center;
+    padding: 2px 2px;
+    border-right: 1px solid gray;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.sidebar-left-nav-list > a.active{
+    color: black;
+    background-color: #A9A9A9;
+    border-right: 4px solid #FF4500;
+}
+
+
 
 section#section-content{
     width:  75%;
@@ -73,9 +129,11 @@ a{
     text-decoration: none;
 }
 
+/*
 .bar-rounded{
     border-radius: 5px;
 }
+*/
 
 div.error-description{
     text-align: center;
