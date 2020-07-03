@@ -48,6 +48,7 @@ def register_commands(app):
         """test command"""
         click.echo("this is testing the command...")
 
+    from website.models import Role
     @app.cli.command()
     @click.option("--drop", is_flag=True, help="drop the tables")
     def initdb(drop):
@@ -57,7 +58,13 @@ def register_commands(app):
             db.drop_all()
             click.echo("dropped all the tables...")
         db.create_all()
+
+        #init roles
+        Role.init_role()
+        click.echo("--initialized roles...")
         click.echo("Done...initialized the database")
+
+
 
 
 def register_shell_context(app):

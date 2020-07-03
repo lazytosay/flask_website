@@ -4,6 +4,7 @@ from website.forms.main import QuestionForm, AnswerForm
 from website.models import Question, Answer
 from website.models import UserCommon as User
 from flask_login import current_user, login_required
+from website.decorators import confirm_required, permission_required
 
 main_bp = Blueprint('main', __name__)
 
@@ -74,11 +75,26 @@ def answer_new(question_id):
         db.session.add(a)
         db.session.commit()
         flash("done answering the question...")
-        return redirect(url_for('main.question_detail', question_id=question_id))
+        return redirect(url_for('main.question_detail', question_id=question_id)+"#answer")
 
     #return redirect(url_for('main/answer_new', form=form))
     return render_template('main/answer_new.html', form=form)
 
+@main_bp.route('/answer/reply/<int:question_id>/<int:answer_id>', methods=['GET', 'POST'])
+@login_required
+@limiter.limit("5 per minute")
+def answer_reply(answer_id, question_id):
+    ans = Answer.query.get_or_404(answer_id)
+    form = AnswerForm()
+    if form.validate_on_submit():
+        reply= form.answer.data
+        answer_reply = Answer(answer=reply, author=current_user, replied_id=answer_id)
+        db.session.add(answer_reply)
+        db.session.commit()
+        flash("reply success...")
+        return redirect(url_for('main.question_detail', question_id=question_id))
+
+    return render_template('/main/answer_reply.html', form=form)
 
 @main_bp.route("/search", methods=['POST'])
 def search():
@@ -93,3 +109,12 @@ def search():
     flash("NOT IMPLEMENTED YET...", "warning")
 
     return redirect(url_for('main.index'))
+
+@main_bp.route('/test-decorator')
+#@confirm_required
+@permission_required('VISIT')
+def test_decorator():
+    #flash("inside test decorator..")
+    flash("inside the permission")
+    return redirect(url_for('main.index'))
+

@@ -13,13 +13,29 @@
     <a class="btn" href="{{url_for('main.answer_new', question_id=question.id) }}">New Answer</a>
     <hr>
 
-    <section class="answer">
+    <section class="answer" id="answer">
         <h3 class="answer-header text-align-center">Answers</h3>
         {% for ans in answers %}
             <div class="answer-container">
                 <small class="answer-timestamp">{{moment(ans.timestamp).format('LLL') }}</small>
                 <small class="answer-author text-align-right">by: {{ans.author.name}}</small>
                 <div class="answer-body">{{ans.answer | safe }}</div>
+                <a href="{{url_for('main.answer_reply', answer_id=ans.id, question_id=question.id) }}">REPLY</a>
+
+                <div class="answer-reply">
+                    replies to answer:
+                    {% for r in ans.replies %}
+                    <div class="answer-reply-container">
+
+                        <div class="answer-reply-body">
+                            {{r.answer}}
+                        </div>
+                        <small class="answer-timestamp">{{moment(r.timestamp).format('LLL') }}</small>
+                        <small class="answer-author text-align-right">by:{{r.author.name}}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+
             </div>
 
             {% if not loop.last %}

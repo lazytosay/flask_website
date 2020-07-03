@@ -11,3 +11,7 @@ class QuestionForm(FlaskForm):
 class AnswerForm(FlaskForm):
     answer = CKEditorField('answer', validators=[DataRequired(), Length(1, 20000)])
     submit = SubmitField('submit')
+
+class CommentForm(FlaskForm):
+    comment = TextAreaField('comment', validators=[DataRequired(), Length(1, 1000)])
+    submit = SubmitField('submit')

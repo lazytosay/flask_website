@@ -197,3 +197,14 @@ span.flask-moment{
     background-color: red;
     text-align: center;
 }
+
+div.answer-reply{
+    padding-left: 15px;
+    border-bottom: 2px solid gray;
+}
+
+div.answer-reply-container{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted gray;
+}

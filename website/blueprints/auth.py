@@ -35,6 +35,20 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
+@auth_bp.route('/resend-confirm-email')
+@login_required
+@limiter.limit("3 per minute")
+def resend_confirm_email():
+    if current_user.is_confirmed:
+        flash("already confirmed your email...")
+        return redirect(url_for('main.index'))
+
+    token = generate_token(current_user.username, "confirm")
+    send_confirm_email(url_for('auth.check', token=token, _external=True), username=current_user.username)
+    flash("your confirm email will be delivered within 24 hours...")
+    return redirect(url_for('main.index'))
+
+
 @auth_bp.route('/check/<token>')
 @login_required
 @limiter.limit("5 per hour")

@@ -3,6 +3,49 @@ from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+class Role(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+
+    users = db.relationship('UserCommon', back_populates='role')
+
+    permissions = db.relationship('Permission', secondary='role_permission', back_populates='roles')
+
+    @staticmethod
+    def init_role():
+        roles_permissions_map = {
+            'Locked': ['VISIT'],
+            'User': ['VISIT', 'ASK', 'ANSWER', 'REPLY'],
+            'Moderator': ['VISIT', 'ASK', 'ANSWER', 'REPLY', 'MODERATE'],
+            'Administrator': ['VISIT', 'ASK', 'ANSWER', 'REPLY', 'MODERATE', 'ADMINISTER']
+        }
+
+        for role_name in roles_permissions_map:
+            role = Role.query.filter_by(name=role_name).first()
+            if role is None:
+                role = Role(name=role_name)
+                db.session.add(role)
+            role.permission = []
+            for permission_name in roles_permissions_map[role_name]:
+                permission = Permission.query.filter_by(name=permission_name).first()
+                if permission is None:
+                    permission = Permission(name=permission_name)
+                    db.session.add(permission)
+                #important
+                role.permissions.append(permission)
+        db.session.commit()
+
+role_permission = db.Table('role_permission',
+                           db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
+                           db.Column('permission_id', db.Integer, db.ForeignKey('permission.id'))
+                           )
+
+class Permission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(30))
+
+    roles = db.relationship('Role', secondary='role_permission', back_populates='permissions')
+
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
@@ -28,6 +71,11 @@ class Answer(db.Model):
 
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='answers')
+
+    replied_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
+    replied = db.relationship('Answer', back_populates='replies', remote_side=[id])
+
+    replies = db.relationship('Answer', back_populates='replied', cascade='all, delete-orphan')
 
 
 
@@ -105,6 +153,14 @@ class UserCommon(db.Model, UserMixin):
     role_id = db.Column(db.Integer, db.ForeignKey('role.id'))
     role = db.relationship('Role', back_populates='users')
 
+    def __init__(self, **kwargs):
+        super(UserCommon, self).__init__(**kwargs)
+        self.set_role()
+
+    def set_role(self):
+        if self.role is None:
+            self.role = Role.query.filter_by(name='User').first()
+            db.session.commit()
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -112,6 +168,11 @@ class UserCommon(db.Model, UserMixin):
     def validate_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def can(self, permission_name):
+        all = Permission.query.all()
+        print("-----all: ", all)
+        permission = Permission.query.filter_by(name=permission_name).first()
+        return permission is not None and self.role is not None and permission in self.role.permissions
 
 #don't know how to do inheritance with UserMixin yet... will cause errors
 #"Columns with foreign keys to other columns "
@@ -131,21 +192,3 @@ class RegularUser(UserCommon):
 """
 
 
-class Role(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))
-
-    users = db.relationship('UserCommon', back_populates='role')
-
-    permission = db.relationship('Permission', secondary='role_permission', back_populates='roles')
-
-role_permission = db.Table('role_permission',
-                           db.Column('role_id', db.Integer, db.ForeignKey('role.id')),
-                           db.Column('permission_id', db.Integer, db.ForeignKey('permission.id'))
-                           )
-
-class Permission(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30))
-
-    roles = db.relationship('Role', secondary='role_permission', back_populates='permission')

@@ -25,7 +25,7 @@ def validate_token(username, token, operation):
 
     if operation == "confirm":
         user = User.query.filter_by(username=username).first()
-        user.confirmed = True
+        user.is_confirmed = True
         db.session.commit()
         flash("done verifying...")
 
