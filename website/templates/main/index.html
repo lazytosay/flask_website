@@ -16,6 +16,7 @@
                     </small>
 
                     <small class="question-list-author">
+                        <img src="{{url_for('user.get_avatar', filename=question.author.avatar_s) }}">
                         By: {{question.author.name}}
                     </small>
                 </div>

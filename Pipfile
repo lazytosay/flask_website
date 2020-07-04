@@ -20,6 +20,7 @@ sendgrid = "*"
 pillow = "*"
 gunicorn = "*"
 flask-limiter = "*"
+flask-avatars = "*"
 
 [requires]
 python_version = "3.7"

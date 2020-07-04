@@ -5,6 +5,16 @@ from wtforms.validators import DataRequired, Length, EqualTo, Regexp, Email
 
 from website.models import UserCommon
 
+class ResetPasswordForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired(), Length(1, 50), Email()])
+    password = PasswordField('password', validators=[EqualTo('password2'), DataRequired(), Length(8, 128)])
+    password2 = PasswordField('confirm password', validators=[DataRequired()])
+    submit = SubmitField('submit')
+
+class ForgetPasswordForm(FlaskForm):
+    email = StringField('email', validators=[DataRequired(), Length(3, 50), Email()])
+    submit = SubmitField('submit')
+
 class RegisterForm(FlaskForm):
     name = StringField('name', validators=[DataRequired(), Length(1, 30)])
     email = StringField('email', validators=[DataRequired(), Length(3, 50), Email()])

@@ -18,7 +18,12 @@
         {% for ans in answers %}
             <div class="answer-container">
                 <small class="answer-timestamp">{{moment(ans.timestamp).format('LLL') }}</small>
-                <small class="answer-author text-align-right">by: {{ans.author.name}}</small>
+                <small class="answer-author text-align-right">
+                    <a href="{{url_for('user.index', username=ans.author.username) }}">
+                        by: {{ans.author.name}}
+                        <img src="{{url_for('user.get_avatar', filename=ans.author.avatar_s) }}">
+                    </a>
+                </small>
                 <div class="answer-body">{{ans.answer | safe }}</div>
                 <a href="{{url_for('main.answer_reply', answer_id=ans.id, question_id=question.id) }}">REPLY</a>
 
@@ -31,7 +36,10 @@
                             {{r.answer}}
                         </div>
                         <small class="answer-timestamp">{{moment(r.timestamp).format('LLL') }}</small>
-                        <small class="answer-author text-align-right">by:{{r.author.name}}</small>
+                        <a href="{{url_for('user.index', username=ans.author.username) }}">
+                            by: {{ans.author.name}}
+                            <img src="{{url_for('user.get_avatar', filename=ans.author.avatar_s) }}">
+                        </a>
                     </div>
                     {% endfor %}
                 </div>

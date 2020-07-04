@@ -1,0 +1,7 @@
+    Hello {{username}}
+welcome to xyz-database
+Please visit the link to verify your email address
+This link will be expired in 15 minutes by default
+{{url_for('auth.check', token=token, _external=True) }}
+
+(Please do not reply to this email...)

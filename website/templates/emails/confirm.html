@@ -1,0 +1,8 @@
+<p>Hello {{username}}</p>
+<p>Welcome to <b>xyz-database</b>!</p>
+<p>Please visit the link below to verify your email address:<br>
+    This link will be expired in 15 minutes by default
+    click: <a href="{{url_for('auth.check', token=token, _external=True) }}">CONFIRM_YOUR_EMAIL_HERE</a>
+    or copy the link: {{url_for('auth.check', token=token, _external=True) }}
+</p>
+<small>(Please do not reply to this email...)</small>

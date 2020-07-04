@@ -1,6 +1,7 @@
 from website.extensions import db
 from datetime import datetime
 from flask_login import UserMixin
+from flask_avatars import Identicon
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class Role(db.Model):
@@ -114,6 +115,8 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
+    #FIXME: do this later
+    last_edit = db.Column(db.DateTime, index=True)
 
     collectors = db.relationship('UserCommon', secondary='collections_questions', back_populates='collections')
 
@@ -124,7 +127,13 @@ class Question(db.Model):
 
     tags = db.relationship('Tag', secondary='tags_questions', back_populates='questions')
 
-
+"""
+@db.event.listen_for(Question, 'after_edit', named=True)
+def update_edit_timestamp(**kwargs):
+    target = kwargs['target']
+    target.last_edit = datetime.utcnow()
+    db.session.commit()
+"""
 
 collections_questions = db.Table('collections_questions',
                                  db.Column('collector_id', db.Integer, db.ForeignKey('user_common.id')),
@@ -145,6 +154,10 @@ class UserCommon(db.Model, UserMixin):
     joinDate = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     is_confirmed = db.Column(db.Boolean, default=False)
 
+    avatar_s = db.Column(db.String(64))
+    avatar_m = db.Column(db.String(64))
+    avatar_l = db.Column(db.String(64))
+
     collections = db.relationship('Question', secondary='collections_questions', back_populates='collectors')
     questions = db.relationship('Question', back_populates='author', cascade='all, delete-orphan')
     answers = db.relationship('Answer', back_populates='author')
@@ -155,6 +168,7 @@ class UserCommon(db.Model, UserMixin):
 
     def __init__(self, **kwargs):
         super(UserCommon, self).__init__(**kwargs)
+        self.generate_avatar()
         self.set_role()
 
     def set_role(self):
@@ -173,6 +187,14 @@ class UserCommon(db.Model, UserMixin):
         print("-----all: ", all)
         permission = Permission.query.filter_by(name=permission_name).first()
         return permission is not None and self.role is not None and permission in self.role.permissions
+
+    def generate_avatar(self):
+        avatar = Identicon()
+        filenames = avatar.generate(text=self.username)
+        self.avatar_s = filenames[0]
+        self.avatar_m = filenames[1]
+        self.avatar_l = filenames[2]
+        db.session.commit()
 
 #don't know how to do inheritance with UserMixin yet... will cause errors
 #"Columns with foreign keys to other columns "

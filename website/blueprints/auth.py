@@ -2,12 +2,57 @@ from flask import render_template, redirect, flash, url_for
 from flask.blueprints import Blueprint
 from flask_login import login_user, login_required, current_user, logout_user
 from website.extensions import limiter, db
-from website.forms.auth import RegisterForm, LoginForm
+from website.forms.auth import RegisterForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
 from website.utils import generate_token, validate_token
-from website.sendGrid import send_confirm_email
+from website.sendGrid import send_confirm_email, send_reset_password_email
 from website.models import UserCommon as User
+from website.settings import Operations
 
 auth_bp = Blueprint('auth', __name__)
+
+@auth_bp.route('/forget-password', methods=['GET', 'POST'])
+def forget_password():
+    if current_user.is_authenticated:
+        flash("please logout before resetting your password...")
+        return redirect(url_for('main.index'))
+
+    form = ForgetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user:
+            token = generate_token(username=user.username, operation=Operations.RESET_PASSWORD)
+            send_reset_password_email(token=token, username=user.username)
+            flash("sent reset password email...please change your password in 15 minutes")
+            return redirect(url_for('auth.login'))
+        flash("invalid email...")
+        return redirect(url_for('auth.forget_password'))
+
+    return render_template('auth/forget_password.html', form=form)
+
+
+@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        flash("please logout before resetting your password...")
+        return redirect(url_for('main.index'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user is None:
+            flash('invalid email address, please try again...')
+            return redirect(url_for('main.index'))
+        if validate_token(username=user.username, token=token, operation=Operations.RESET_PASSWORD,
+                          new_password=form.password.data):
+            flash("password updated...")
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Invalid or expired link...')
+            return redirect(url_for('auth.foget_password'))
+
+    return render_template('auth/reset_password.html', form=form)
+
+
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 @limiter.limit('10/minute')

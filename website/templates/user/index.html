@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %} {{user.username}} {% endblock %}
+
+{% block header %}{{user.username}}'s index page {% endblock %}
+{% block content %}
+    this is user index page
+    <div class="profile">
+        <img src="{{url_for('user.get_avatar', filename=user.avatar_l) }}">
+        <div class="profile-line">name: {{user.name}}</div>
+        <div class="profile-line">join date: {{moment(user.joinDate).format('LLL') }}</div>
+        <div class="profile-line">num of questions: {{user.questions | length }}</div>
+        <div class="profile-line">num of answers: {{user.answers | length }}</div>
+        <div class="profile-line">num of comments: {{user.comments | length }}</div>
+    </div>
+{% endblock %}

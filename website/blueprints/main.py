@@ -110,11 +110,23 @@ def search():
 
     return redirect(url_for('main.index'))
 
-@main_bp.route('/test-decorator')
-#@confirm_required
+
+@main_bp.route('/test/permission/visit')
 @permission_required('VISIT')
-def test_decorator():
-    #flash("inside test decorator..")
-    flash("inside the permission")
+def test_permission_visit():
+    flash("you have the permission: VISIT")
     return redirect(url_for('main.index'))
 
+
+@main_bp.route('/test/permission/confirm')
+@confirm_required
+def test_permission_confirm():
+    flash("you are confirmed")
+    return redirect(url_for('main.index'))
+
+
+@main_bp.route('/test/permission/moderate')
+@permission_required('MODERATE')
+def test_permission_moderate():
+    flash("you have the permission: moderate")
+    return redirect(url_for('main.index'))

@@ -2,9 +2,10 @@ from flask import Flask, render_template
 import click
 import os
 from website.settings import config
-from website.extensions import bootstrap, db, ckeditor, moment, login_manager ,limiter
+from website.extensions import bootstrap, db, ckeditor, moment, avatars, login_manager ,limiter
 from website.blueprints.main import main_bp
 from website.blueprints.auth import auth_bp
+from website.blueprints.user import user_bp
 
 
 def create_app(config_name=None):
@@ -26,12 +27,14 @@ def create_app(config_name=None):
 def register_blueprints(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, prefix="/auth")
+    app.register_blueprint(user_bp, prefix="/user")
 
 def register_extensions(app):
     bootstrap.init_app(app)
     db.init_app(app)
     ckeditor.init_app(app)
     moment.init_app(app)
+    avatars.init_app(app)
     login_manager.init_app(app)
     limiter.init_app(app)
 
