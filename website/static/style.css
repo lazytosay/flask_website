@@ -198,13 +198,22 @@ span.flask-moment{
     text-align: center;
 }
 
-div.answer-reply{
+div.answer-body{
+    background-color: #DCDCDC;
+}
+
+div.answer-comment{
     padding-left: 15px;
     border-bottom: 2px solid gray;
 }
 
-div.answer-reply-container{
+div.answer-comment-container{
     padding-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 1px dotted gray;
+    border-top: 1px dotted gray;
+}
+
+div.answer-comment-body{
+    padding-left: 10px;
+    line-height: 150%;
 }

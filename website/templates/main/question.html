@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}New Question {% endblock %}
+{% block title %}Your Question {% endblock %}
 
-{% block header %}New Question {% endblock %}
+{% block header %}Your Question {% endblock %}
 
 {% block content %}
     {% from 'bootstrap/form.html' import render_form %}
-    This is new question
+
     <div class="question-new">
         {{render_form(form) }}
     </div>

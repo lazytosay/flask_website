@@ -56,6 +56,9 @@ class Comment(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='comments')
 
+    answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
+    answer = db.relationship('Answer', back_populates='comments')
+
     replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
 
@@ -66,6 +69,8 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    #FIXME: do this later
+    #last_edit_timestamp = db.Column(db.DateTime)
 
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'))
     question = db.relationship('Question', back_populates='answers')
@@ -73,10 +78,7 @@ class Answer(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user_common.id'))
     author = db.relationship('UserCommon', back_populates='answers')
 
-    replied_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
-    replied = db.relationship('Answer', back_populates='replies', remote_side=[id])
-
-    replies = db.relationship('Answer', back_populates='replied', cascade='all, delete-orphan')
+    comments = db.relationship('Comment', back_populates='answer', cascade='all, delete-orphan')
 
 
 
@@ -116,7 +118,7 @@ class Question(db.Model):
     question = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     #FIXME: do this later
-    last_edit = db.Column(db.DateTime, index=True)
+    #last_edit_timestamp = db.Column(db.DateTime, index=True)
 
     collectors = db.relationship('UserCommon', secondary='collections_questions', back_populates='collections')
 

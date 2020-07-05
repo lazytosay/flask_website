@@ -1,0 +1,13 @@
+Hello {{username}}
+Welcome to xyz-database!
+
+{% block note %}
+        Notes:
+            The link will be expired in 15 minutes by default
+            The link is only clickable for three times within the time limit
+            Please do not reply to this email
+
+{% endblock %}
+
+{% block content %}{% endblock %}
+

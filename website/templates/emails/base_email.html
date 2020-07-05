@@ -1,0 +1,17 @@
+<p>Hello {{username}}</p>
+<p>Welcome to <b>xyz-database</b>!</p>
+
+{% block note %}
+    <div class="email-note">
+        Notes:
+        <ul>
+            <li>The link will be expired in 15 minutes by default</li>
+            <li>The link is only clickable for three times within the time limit</li>
+            <li>Please do not reply to this email</li>
+        </ul>
+    </div>
+
+{% endblock %}
+
+{% block content %}{% endblock %}
+

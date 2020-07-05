@@ -2,7 +2,7 @@ from flask import Flask, render_template
 import click
 import os
 from website.settings import config
-from website.extensions import bootstrap, db, ckeditor, moment, avatars, login_manager ,limiter
+from website.extensions import bootstrap, db, ckeditor, moment, avatars, login_manager, csrf, limiter
 from website.blueprints.main import main_bp
 from website.blueprints.auth import auth_bp
 from website.blueprints.user import user_bp
@@ -35,6 +35,7 @@ def register_extensions(app):
     ckeditor.init_app(app)
     moment.init_app(app)
     avatars.init_app(app)
+    csrf.init_app(app)
     login_manager.init_app(app)
     limiter.init_app(app)
 

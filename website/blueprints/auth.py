@@ -3,7 +3,7 @@ from flask.blueprints import Blueprint
 from flask_login import login_user, login_required, current_user, logout_user
 from website.extensions import limiter, db
 from website.forms.auth import RegisterForm, LoginForm, ForgetPasswordForm, ResetPasswordForm
-from website.utils import generate_token, validate_token
+from website.utils import generate_token, validate_token, check_expiry
 from website.sendGrid import send_confirm_email, send_reset_password_email
 from website.models import UserCommon as User
 from website.settings import Operations
@@ -31,24 +31,33 @@ def forget_password():
 
 
 @auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+@limiter.limit("3 per day")
 def reset_password(token):
     if current_user.is_authenticated:
         flash("please logout before resetting your password...")
         return redirect(url_for('main.index'))
 
+    #check to see if token is expired, we dont have username yet, so we need to use another function
+    time_valid = check_expiry(token)
+    if not time_valid:
+        flash("either the token is expired or its content has been altered, please resend the email...")
+        return redirect(url_for('main.index'))
+
+    flash("NOTE: submission will not be accepted if the token is expired, check the email your received or resend the email if submission is rejected")
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
         if user is None:
             flash('invalid email address, please try again...')
             return redirect(url_for('main.index'))
-        if validate_token(username=user.username, token=token, operation=Operations.RESET_PASSWORD,
-                          new_password=form.password.data):
+        if validate_token(username=user.username, token=token, operation=Operations.RESET_PASSWORD):
+            user.set_password(form.password.data)
+            db.session.commit()
             flash("password updated...")
             return redirect(url_for('auth.login'))
         else:
             flash('Invalid or expired link...')
-            return redirect(url_for('auth.foget_password'))
+            return redirect(url_for('auth.forget_password'))
 
     return render_template('auth/reset_password.html', form=form)
 
@@ -74,9 +83,9 @@ def register():
         db.session.commit()
 
         token = generate_token(username, "confirm")
-        send_confirm_email(url_for('auth.check', token=token, _external=True), username=username)
+        send_confirm_email(token=token, username=username)
         flash("Register success!")
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
@@ -89,20 +98,25 @@ def resend_confirm_email():
         return redirect(url_for('main.index'))
 
     token = generate_token(current_user.username, "confirm")
-    send_confirm_email(url_for('auth.check', token=token, _external=True), username=current_user.username)
+    send_confirm_email(token=token, username=current_user.username)
     flash("your confirm email will be delivered within 24 hours...")
     return redirect(url_for('main.index'))
 
 
 @auth_bp.route('/check/<token>')
 @login_required
-@limiter.limit("5 per hour")
+@limiter.limit("3 per hour")
 def check(token):
-    if validate_token(current_user.username, token, "confirm"):
+    if current_user.is_confirmed:
+        flash("already confirmed....")
+
+    elif validate_token(current_user.username, token, "confirm"):
         flash("email confirmed")
         return redirect(url_for('main.index'))
 
-    flash("email token not valid...")
+    else:
+        flash("email token not valid...")
+
     return redirect(url_for('main.index'))
 
 @auth_bp.route('/login', methods=['GET', 'POST'])

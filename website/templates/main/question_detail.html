@@ -5,43 +5,88 @@
 {% block header %}Quesiton Detail {% endblock %}
 
 {% block content %}
-    <section class="question">
-        <div class="question-body">{{question.question | safe}}</div>
+    <!-- for question detail part -->
 
+    <section class="question">
+        <small class="question-timestamp">{{moment(question.timestamp).format('LLL') }}</small>
+        <small class="question-author">
+            <a href="{{url_for('user.index', username=question.author.username) }}">
+                {{question.author.username}}
+                <img src="{{url_for('user.get_avatar', filename=question.author.avatar_s) }}">
+            </a>
+        </small>
+        <div class="question-body">{{question.question | safe}}</div>
     </section>
+
+    <!-- manage question -->
+    {% if current_user == question.author %}
+        <a class="btn" href="{{url_for('main.question_edit', question_id=question.id) }}">EDIT</a>
+
+        <form class="inline" method="post" action="{{url_for('main.question_delete', question_id=question.id) }}">
+            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+            <input type="submit" value="delete">
+        </form>
+    {% endif %}
 
     <a class="btn" href="{{url_for('main.answer_new', question_id=question.id) }}">New Answer</a>
     <hr>
 
+    <!-- answer -->
     <section class="answer" id="answer">
         <h3 class="answer-header text-align-center">Answers</h3>
         {% for ans in answers %}
             <div class="answer-container">
-                <small class="answer-timestamp">{{moment(ans.timestamp).format('LLL') }}</small>
-                <small class="answer-author text-align-right">
-                    <a href="{{url_for('user.index', username=ans.author.username) }}">
-                        by: {{ans.author.name}}
-                        <img src="{{url_for('user.get_avatar', filename=ans.author.avatar_s) }}">
-                    </a>
-                </small>
-                <div class="answer-body">{{ans.answer | safe }}</div>
-                <a href="{{url_for('main.answer_reply', answer_id=ans.id, question_id=question.id) }}">REPLY</a>
-
-                <div class="answer-reply">
-                    replies to answer:
-                    {% for r in ans.replies %}
-                    <div class="answer-reply-container">
-
-                        <div class="answer-reply-body">
-                            {{r.answer}}
-                        </div>
-                        <small class="answer-timestamp">{{moment(r.timestamp).format('LLL') }}</small>
+                <!--answer part -->
+                <div class="answer-main">
+                    <small class="answer-timestamp">{{moment(ans.timestamp).format('LLL') }}</small>
+                    <small class="answer-author text-align-right">
                         <a href="{{url_for('user.index', username=ans.author.username) }}">
                             by: {{ans.author.name}}
                             <img src="{{url_for('user.get_avatar', filename=ans.author.avatar_s) }}">
                         </a>
+                    </small>
+                    <div class="answer-body">{{ans.answer | safe }}</div>
+
+                    <!--manage answer -->
+                    {% if current_user == ans.author%}
+                        <a href="{{url_for('main.answer_edit', answer_id=ans.id, question_id=question.id) }}">EDIT</a>
+
+                        <form class="inline" method="post" action="{{url_for('main.answer_delete', question_id=question.id, answer_id=ans.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                            <input type="submit" value="delete">
+                        </form>
+                    {% endif %}
+
+                    <a href="{{url_for('main.comment_new', answer_id=ans.id, question_id=question.id) }}">COMMENT</a>
+                </div>
+
+                <!--comment part -->
+                <div class="answer-comment">
+
+                    {% for c in ans.comments %}
+                    <div class="answer-comment-container">
+                        #{{loop.index}}--
+                        <small class="comment-timestamp">{{moment(c.timestamp).format('LLL') }}</small>
+                        <a href="{{url_for('user.index', username=c.author.username) }}">
+                            by: {{ans.author.name}}
+                            <img src="{{url_for('user.get_avatar', filename=c.author.avatar_s) }}">
+                        </a>
+                        <div class="answer-comment-body">
+                            &rightarrow;|{{c.comment}}
+                        </div>
+
+                        <!--manage comment -->
+                        {% if current_user == c.author %}
+                            <form class="inline" method="post" action="{{url_for('main.comment_delete', question_id=question.id, comment_id=c.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+                                <input type="submit" value="delete">
+                            </form>
+                        {% endif %}
+
                     </div>
                     {% endfor %}
+
+
                 </div>
 
             </div>

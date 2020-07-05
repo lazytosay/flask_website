@@ -29,7 +29,7 @@ def send_confirm_email(token, username):
     send_email(
         from_email='noreply@xyzdatabase.com',
         to_email=user.email,
-        subject="confirm your account",
+        subject="Confirm Your Account",
         template='emails/confirm',
         username=username,
         token=token
@@ -44,7 +44,7 @@ def send_reset_password_email(token, username):
     send_email(
         from_email='noreply@xyzdatabase.com',
         to_email=user.email,
-        subject="confirm your account",
+        subject="Reset Your Password",
         template='emails/reset_password',
         username=username,
         token=token

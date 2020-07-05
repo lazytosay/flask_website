@@ -1,7 +1,8 @@
-    Hello {{username}}
-welcome to xyz-database
-Please visit the link to verify your email address
-This link will be expired in 15 minutes by default
-{{url_for('auth.check', token=token, _external=True) }}
+{% extends 'emails/base_email.html' %}
 
-(Please do not reply to this email...)
+{% block content %}
+        Please visit the link below to verify your email address:<br>
+            click: <a href="{{url_for('auth.check', token=token, _external=True) }}">CONFIRM_YOUR_EMAIL_HERE</a>
+
+            or copy the link: {{url_for('auth.check', token=token, _external=True) }}
+{% endblock %}

@@ -6,6 +6,7 @@ from flask_login import LoginManager, AnonymousUserMixin
 from flask_ckeditor import CKEditor
 from flask_moment import Moment
 from flask_avatars import Avatars
+from flask_wtf import CSRFProtect
 from sendgrid import SendGridAPIClient
 import os
 
@@ -25,6 +26,8 @@ ckeditor = CKEditor()
 moment = Moment()
 
 avatars = Avatars()
+
+csrf = CSRFProtect()
 
 sendgrid_client = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
 

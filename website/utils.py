@@ -11,8 +11,15 @@ def generate_token(username, operation, expire_in=900, **kwargs):
     data.update(**kwargs)
     return s.dumps(data)
 
+def check_expiry(token):
+    s = Serialier(current_app.config['SECRET_KEY'])
+    try:
+        data = s.loads(token)
+    except (SignatureExpired, BadSignature):
+        return False
 
-def validate_token(username, token, operation, new_password):
+
+def validate_token(username, token, operation):
     s = Serialier(current_app.config['SECRET_KEY'])
 
     try:
@@ -23,21 +30,20 @@ def validate_token(username, token, operation, new_password):
     if operation != data.get('operation') or username != data.get('id'):
         return False
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username).first_or_404()
+
     if operation == "confirm":
         user.is_confirmed = True
         db.session.commit()
         flash("done verifying...")
+
     elif operation == "reset-password":
-        if new_password:
-            user.set_password(new_password)
-            db.session.commit()
-            flash("done changing your password...")
-        else:
-            flash("password received is empty...try again")
+        flash("token is valid, ready to reset your password...")
+        return True
 
     else:
-        flash("check failed: operation: ", data.get('operation'))
+        flash("token failed to pass the verification, make sure it's not expired or the contents are not altered...")
+        return False
 
     return True
 

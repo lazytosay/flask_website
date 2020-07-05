@@ -7,10 +7,14 @@
     this is user index page
     <div class="profile">
         <img src="{{url_for('user.get_avatar', filename=user.avatar_l) }}">
-        <div class="profile-line">name: {{user.name}}</div>
-        <div class="profile-line">join date: {{moment(user.joinDate).format('LLL') }}</div>
-        <div class="profile-line">num of questions: {{user.questions | length }}</div>
-        <div class="profile-line">num of answers: {{user.answers | length }}</div>
-        <div class="profile-line">num of comments: {{user.comments | length }}</div>
+        <div class="profile-item">username: {{user.username}}</div>
+        <div class="profile-item">join date: {{moment(user.joinDate).format('LLL') }}</div>
+        <div class="profile-item">num of questions: {{user.questions | length }}</div>
+        <div class="profile-item">num of answers: {{user.answers | length }}</div>
+        <div class="profile-item">num of comments: {{user.comments | length }}</div>
+        <div class="profile-item">about: {{user.about | safe }} </div>
+        <div class="profile-item">email_confirm_status: {{user.is_confirmed}}</div>
+        <div class="profile-item">Role: {{user.role.name}}</div>
+
     </div>
 {% endblock %}
