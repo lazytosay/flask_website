@@ -18,6 +18,8 @@ def check_expiry(token):
     except (SignatureExpired, BadSignature):
         return False
 
+    return True
+
 
 def validate_token(username, token, operation):
     s = Serialier(current_app.config['SECRET_KEY'])

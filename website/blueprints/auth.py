@@ -31,7 +31,7 @@ def forget_password():
 
 
 @auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
-@limiter.limit("3 per day")
+@limiter.limit("3 per hour")
 def reset_password(token):
     if current_user.is_authenticated:
         flash("please logout before resetting your password...")
