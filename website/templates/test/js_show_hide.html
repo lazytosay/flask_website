@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %} Test js {% endblock %}
+
+{% block header %} Test js {% endblock %}
+
+{% block content %}
+
+    <!--- show and hide... -->
+    <div id="description-top">
+        This is the top description
+        <a id="description-btn" href="#!">Edit</a>
+    </div>
+
+    <div id="description-bot">
+        Bot
+        <a id="description-cancel" href="#!">Cancel</a>
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='js/script.js') }}"></script>
+{% endblock %}

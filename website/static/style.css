@@ -217,3 +217,8 @@ div.answer-comment-body{
     padding-left: 10px;
     line-height: 150%;
 }
+
+div#description-bot{
+    display:none;
+}
+

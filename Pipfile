@@ -21,6 +21,7 @@ pillow = "*"
 gunicorn = "*"
 flask-limiter = "*"
 flask-avatars = "*"
+flask-socketio = "*"
 
 [requires]
 python_version = "3.7"

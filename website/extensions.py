@@ -7,6 +7,7 @@ from flask_ckeditor import CKEditor
 from flask_moment import Moment
 from flask_avatars import Avatars
 from flask_wtf import CSRFProtect
+from flask_socketio import SocketIO
 from sendgrid import SendGridAPIClient
 import os
 
@@ -28,6 +29,8 @@ moment = Moment()
 avatars = Avatars()
 
 csrf = CSRFProtect()
+
+socket = SocketIO()
 
 sendgrid_client = SendGridAPIClient(os.getenv('SENDGRID_API_KEY'))
 

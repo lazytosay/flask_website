@@ -78,6 +78,23 @@ def question_delete(question_id):
         db.session.commit()
 
     return redirect(url_for('main.index'))
+"""
+@main_bp.route('/test/modal')
+@limiter.limit('1 per second')
+def test_modal():
+    return render_template('test/modal.html')
+
+@main_bp.route('/test/modal/confirm', methods=['POST'])
+@limiter.limit('1 per minute')
+def test_modal_confirm():
+    flash("modal test works...")
+    return redirect(url_for('main.index'))
+"""
+#FIXME: delete later
+@main_bp.route('/test/js/show_hide')
+@limiter.limit("1 per second")
+def test_js_show_hide():
+    return render_template('test/js_show_hide.html')
 
 
 @main_bp.route('/question/detail/<int:question_id>')
