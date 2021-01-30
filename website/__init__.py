@@ -18,18 +18,25 @@ def create_app(config_name=None):
     app.config.from_object(config[config_name])
 
     register_blueprints(app)
+    """
     register_extensions(app)
     register_error_handlers(app)
     register_commands(app)
     register_shell_context(app)
+    """
 
     return app
 
 def register_blueprints(app):
+    """
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, prefix="/auth")
     app.register_blueprint(user_bp, prefix="/user")
     app.register_blueprint(chat_bp, prefix="/chat")
+    """
+    from website.blueprints.test import test_bp
+    app.register_blueprint(test_bp)
+
 
 def register_extensions(app):
     bootstrap.init_app(app)
